@@ -67,6 +67,8 @@ contract MyEpicNFT is ERC721URIStorage {
         return thirdWords[rand];
     }
 
+    event NewEpicNFTMinted(address sender, uint256 tokenId);
+
     function random(string memory input) internal pure returns (uint256) {
         return uint256(keccak256(abi.encodePacked(input)));
     }
@@ -82,7 +84,6 @@ contract MyEpicNFT is ERC721URIStorage {
         string memory third = pickRandomThirdWord(newItemId);
         string memory combinedWord = string(abi.encodePacked(first, second, third));
 
-        
         // I concatenate it all together, and then close the <text> and <svg> tags.
         string memory finalSvg = string(abi.encodePacked(baseSvg, combinedWord, "</text></svg>"));
 
@@ -126,5 +127,9 @@ contract MyEpicNFT is ERC721URIStorage {
         // Increment the counter for when the next NFT is minted.
         _tokenIds.increment();
         console.log("An NFT w/ ID %s has been minted to %s", newItemId, msg.sender);
+
+        // Just because our transaction is mined, does not mean the transaction 
+        // resulted in NFT being minted.
+        emit NewEpicNFTMinted(msg.sender, newItemId);
     }
 }
